@@ -1,0 +1,62 @@
+$breakpoints: (
+  "sp": "(max-width: 750px)",
+  "tb": "(min-width: 751px) and (max-width: 1000px)",
+  "pc": "(min-width: 1001px)",
+);
+@mixin mq($breakpoint: sp) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+.signupsignin_header {
+  position: absolute;
+  z-index: 999;
+  top: 20px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  div.left {
+    width: 45px;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+@include mq(pc) {
+  .signupsignin_header {
+    display: none;
+  }
+}
+@include mq(tb) {
+  .signupsignin_header {
+    width: 90%;
+    .authBx {
+      display: block;
+      color: #fff;
+      line-height: 45px;
+      p {
+        margin: 0;
+      }
+    }
+  }
+  .sinup_bx > form > div > div > div > input {
+    padding: 10px;
+  }
+}
+@include mq(sp) {
+  .signupsignin_header {
+    width: 90%;
+    .authBx {
+      display: block;
+      color: #fff;
+      line-height: 45px;
+      p {
+        margin: 0;
+      }
+    }
+  }
+  .sinup_bx > form > div > div > div > input {
+    padding: 10px;
+  }
+}

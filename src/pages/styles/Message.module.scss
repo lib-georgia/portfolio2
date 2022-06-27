@@ -1,0 +1,57 @@
+.message_inner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  min-width: calc(100% - 350px);
+  width: 70%;
+  .inner {
+    position: absolute;
+    width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .message_showBx {
+      border: 1px solid #ddd;
+      padding: 2%;
+      border-radius: 5px;
+      box-sizing: border-box;
+      ul {
+        overflow: hidden;
+        padding: 0;
+        li {
+          display: flex;
+          &:hover {
+            opacity: 0.7;
+            cursor: pointer;
+          }
+          p {
+            margin: 7px 10px;
+          }
+        }
+      }
+    }
+    .message_submitBx {
+      overflow: hidden;
+      .left {
+        background: #fff;
+        width: 400px;
+      }
+      .right {
+        width: 80px;
+        text-align: center;
+        background: #f00;
+        margin-top: 7px;
+        color: #fff;
+        padding: 11px 0 12px;
+        font-weight: bold;
+        border-radius: 5px;
+        box-sizing: border-box;
+        &:hover {
+          opacity: 0.7;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

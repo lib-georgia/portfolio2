@@ -1,0 +1,50 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "rewrites": [
+      {
+        "source": "/v1/approvalRequest",
+        "function": "approvalRequest"
+      },
+      {
+        "source": "/v1/deleteRequest",
+        "function": "deleteRequest"
+      },
+      {
+        "source": "/v1/friendRequest",
+        "function": "friendRequest"
+      },
+      {
+        "source": "/v1/sendMessage",
+        "function": "sendMessage"
+      },
+      {
+        "source": "/v1/signUp",
+        "function": "signUp"
+      },
+      {
+        "source": "/v1/editUserData",
+        "function": "editUserData"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "functions": {
+    "source": "functions"
+  }
+}
