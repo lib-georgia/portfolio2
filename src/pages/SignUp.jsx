@@ -38,7 +38,7 @@ const SignUp = () => {
       </div>
       <div className={Style.right}>
         <div className={Style.sinup_bx}>
-          <h2>Sign&nbsp;aaaup</h2>
+          <h2>Sign&nbsp;up</h2>
           <TextBox className={'inputBx'} label={'Full Name（フルネーム）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={name} onChange={inputName}/>
           <TextBox className={'inputBx'} label={'Email（メールアドレス）'} type={"email"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={email} onChange={inputEmail}/>
           <TextBox className={'inputBx'} label={'Password（パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={password} onChange={inputPassword} />
