@@ -28,8 +28,14 @@ $breakpoints: (
       border-radius: 5px;
       .copyMyId {
         padding: 3% 0;
-        display: block;
+        display: flex;
         margin-bottom: 2%;
+        float: right;
+        position: relative;
+        right: 0;
+        p{
+          margin:0 5px 0 0;
+        }
         &:hover {
           cursor: pointer;
           opacity: 0.7;

@@ -8,6 +8,7 @@ import { useAuthContext } from '../pages/AuthContext';
 import Style from './styles/Profile.module.scss';
 import { db,storage } from '../firebase';
 import Resizer from "react-image-file-resizer";
+import {LineShareButton,LineIcon} from "react-share";
 
 const Profile = memo((props) => {
     const { user } = useAuthContext();
@@ -122,7 +123,8 @@ const Profile = memo((props) => {
             props.classToggle();
         }
     }
-
+    const URL = 'https://geolocation-18aa2.web.app/signup';
+    const QUOTE = `友だちIDが届きました。Geolocationで検索して友だちになりましょう。${uid}`;
         return (
             <div className={Style.profilePage_bx}>
                 <div className={Style.sidebar_bx}>
@@ -144,7 +146,8 @@ const Profile = memo((props) => {
                                 </label>
                             </div>
                         </Stack>
-                        <span className={Style.copyMyId} onClick={() => copyText(uid)}>自分のIDをコピー</span>
+                        {/* <span className={Style.copyMyId} onClick={() => copyText(uid)}>自分のIDをコピー</span> */}
+                        <LineShareButton className={Style.copyMyId} url={URL} title={QUOTE}><p>自分のIDをLINEで共有</p><LineIcon size={24} round /></LineShareButton>
                         <TextBox className={'inputBx'} label={'Full Name（フルネーム）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={name} onChange={inputName}/>
                         <TextBox className={'inputBx'} label={'Email（メールアドレス）'} type={"email"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={email} onChange={inputEmail}/>
                         <TextBox className={'inputBx'} label={'Nationality（国籍）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={nationality} onChange={inputNationality} />
