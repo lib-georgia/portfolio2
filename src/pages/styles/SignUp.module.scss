@@ -1,13 +1,3 @@
-// $breakpoints: (
-//   "sp": "(max-width: 750px)",
-//   "tb": "(min-width: 751px) and (max-width: 1000px)",
-//   "pc": "(min-width: 1001px)",
-// );
-// @mixin mq($breakpoint: sp) {
-//   @media #{map-get($breakpoints, $breakpoint)} {
-//     @content;
-//   }
-// }
 @import "./_breakpoint";
 @import "./_mixin";
 .ovf {
@@ -31,9 +21,9 @@
         right: 0;
         .inner {
           width: 100%;
-          padding: 15px 15px 10px 15px;
+          padding: 10px 10px 5px 10px;
           background: #fff;
-          border-radius: 12px;
+          border-radius: 5px;
           box-sizing: border-box;
           box-shadow: 0 50px 100px -20px rgb(50 50 93 / 25%),
             0 30px 60px -30px rgb(0 0 0 / 30%),
@@ -45,19 +35,21 @@
         }
       }
       .spDisplay {
-        width: 30%;
         position: absolute;
-        top: 12%;
         left: 0;
+        @include mq(vertical){
+          width: 30%;
+          top: 25%;
+        }
         @include mq(beside){
-          top: 21%;
+          top: 32%;
           width: 27%;
         }
         .inner {
           width: 100%;
           padding: 10px 10px 5px 10px;
           background: #fff;
-          border-radius: 12px;
+          border-radius: 5px;
           box-sizing: border-box;
           box-shadow: 0 50px 100px -20px rgb(50 50 93 / 25%),
             0 30px 60px -30px rgb(0 0 0 / 30%),
@@ -182,9 +174,16 @@
       position: relative;
       float: none;
       .displayBx {
-        width: 70%;
-        height: 40vw;
-        top: 58%;
+        @include mq(vertical){
+          width: 70%;
+          height: 40vw;
+          top: 58%;
+        }
+        @include mq(beside){
+          width: 35%;
+          height: 19vw;
+          top: 50%;
+        }
       }
     }
     .right {
