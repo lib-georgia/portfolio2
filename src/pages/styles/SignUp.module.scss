@@ -1,13 +1,15 @@
-$breakpoints: (
-  "sp": "(max-width: 750px)",
-  "tb": "(min-width: 751px) and (max-width: 1000px)",
-  "pc": "(min-width: 1001px)",
-);
-@mixin mq($breakpoint: sp) {
-  @media #{map-get($breakpoints, $breakpoint)} {
-    @content;
-  }
-}
+// $breakpoints: (
+//   "sp": "(max-width: 750px)",
+//   "tb": "(min-width: 751px) and (max-width: 1000px)",
+//   "pc": "(min-width: 1001px)",
+// );
+// @mixin mq($breakpoint: sp) {
+//   @media #{map-get($breakpoints, $breakpoint)} {
+//     @content;
+//   }
+// }
+@import "./_breakpoint";
+@import "./_mixin";
 .ovf {
   width: 100%;
   overflow: hidden;
@@ -141,7 +143,7 @@ $breakpoints: (
       }
     }
   }
-  @include mq(tb) {
+  @include mq(tab) {
     .left {
       width: 100%;
       height: 50vh;

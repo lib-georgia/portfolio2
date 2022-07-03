@@ -86,10 +86,6 @@ const Profile = memo((props) => {
             console.log("データの読み込みに失敗しました。")
           }
         }
-    };
-    
-    function copyText(entryText) {
-        navigator.clipboard.writeText(entryText);
     }
 
     const [browserSize, setBrowserSize] = useState(false);
