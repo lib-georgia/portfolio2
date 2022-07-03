@@ -47,6 +47,10 @@ $breakpoints: (
         position: absolute;
         top: 12%;
         left: 0;
+        @include mq(beside){
+          top: 21%;
+          width: 27%;
+        }
         .inner {
           width: 100%;
           padding: 10px 10px 5px 10px;
@@ -145,8 +149,12 @@ $breakpoints: (
       float: none;
       .displayBx {
         width: 60%;
-        height: 28vw;
+        height: 34vw;
         top: 58%;
+        @include mq(beside){
+          width: 46%;
+          height:26vw;
+        }
       }
     }
     .right {
@@ -172,8 +180,8 @@ $breakpoints: (
       position: relative;
       float: none;
       .displayBx {
-        width: 90%;
-        height: 52vw;
+        width: 70%;
+        height: 40vw;
         top: 58%;
       }
     }
