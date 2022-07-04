@@ -1,5 +1,19 @@
 import { auth } from "../firebase"
 import { getAuth, deleteUser } from "firebase/auth";
+
+const isValidEmailFormat = (email) => {
+    const regex = /^[a-zA-Z0-9_+-]+(\.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/;
+    return regex.test(email)
+}
+const isValidRequiredInput = (...args) => {
+    let validator = true;
+    for (let i=0; i < args.length; i=(i+1)|0) {
+        if (args[i] === "") {
+            validator = false;
+        }
+    }
+    return validator
+};
 const headers = new Headers();
 headers.set('Content-type', 'application/json');
 
@@ -16,6 +30,10 @@ export const signUp = (name, email,password,confirmPassword) => {
         }
         if (password.length < 6) {
             alert('パスワードは6文字以上で入力してください。')
+            return false
+        }
+        if(!isValidEmailFormat(email)) {
+            alert('メールアドレスの形式が不正です。もう1度お試しください。')
             return false
         }
         return auth.createUserWithEmailAndPassword(email, password).then(async(result) => {
@@ -72,8 +90,12 @@ export const signUp = (name, email,password,confirmPassword) => {
 
 export const signIn = (email,password) => {
     return async () => {
-        if (email === "" || password === "") {
-            alert("必須項目が未入力です。")
+        if (!isValidRequiredInput(email, password)) {
+            alert('メールアドレスかパスワードが未入力です。')
+            return false
+        }
+        if (!isValidEmailFormat(email)) {
+            alert('メールアドレスの形式が不正です。')
             return false
         }
         auth.signInWithEmailAndPassword(email, password)
