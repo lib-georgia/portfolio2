@@ -1,13 +1,5 @@
-$breakpoints: (
-  "sp": "(max-width: 750px)",
-  "tb": "(min-width: 751px) and (max-width: 1000px)",
-  "pc": "(min-width: 1001px)",
-);
-@mixin mq($breakpoint: sp) {
-  @media #{map-get($breakpoints, $breakpoint)} {
-    @content;
-  }
-}
+@import "../../pages/styles/_breakpoint";
+@import "../../pages/styles/_mixin";
 .signupsignin_header {
   position: absolute;
   z-index: 999;
@@ -28,7 +20,7 @@ $breakpoints: (
     display: none;
   }
 }
-@include mq(tb) {
+@include mq(tab) {
   .signupsignin_header {
     width: 90%;
     .authBx {

@@ -1,12 +1,5 @@
-$breakpoints: (
-  "sp": "(max-width: 750px)",
-  "pc": "(min-width: 751px)",
-);
-@mixin mq($breakpoint: sp) {
-  @media #{map-get($breakpoints, $breakpoint)} {
-    @content;
-  }
-}
+@import "../../pages/styles/_breakpoint";
+@import "../../pages/styles/_mixin";
 .profilePage_bx {
   background: #fff;
   .profileEdit {
@@ -27,14 +20,24 @@ $breakpoints: (
       transform: translate(-50%, -50%);
       border-radius: 5px;
       .copyMyId {
-        padding: 3% 0;
         display: flex;
         margin-bottom: 2%;
-        float: right;
-        position: relative;
-        right: 0;
+        width: 100%;
         p{
           margin:0 5px 0 0;
+          text-align: right;
+          width: 100%;
+          span{
+            background: rgb(234 191 50);
+            color: #fff;
+            font-size: 12px;
+            margin-left: 5px;
+            border-radius: 3px;
+            font-weight: bold;
+            display: inline-block;
+            line-height: 2;
+            padding: 0 5px;
+          }
         }
         &:hover {
           cursor: pointer;
@@ -71,14 +74,18 @@ $breakpoints: (
         font-weight: bold;
         text-align: center;
         margin: 20px auto 0 auto;
-        border-radius: 5px;
+        border-radius: 3px;
         &:hover {
           opacity: 0.7;
           cursor: pointer;
         }
+        @include mq(sp){
+          width: 100%;
+        }
       }
       .editBtn_bx {
         overflow: hidden;
+        display: flex;
         div {
           padding: 12px 0;
           box-sizing: border-box;
@@ -112,9 +119,23 @@ $breakpoints: (
         .avatar_bx {
           margin-bottom: 0;
         }
-        .copyMyId {
-          padding: 0 0 3% 0;
-        }
+        .copyMyId{
+          width: 100%;
+          p{
+            text-align: right;
+            span{
+              background: rgb(234 191 50);
+              color: #fff;
+              font-size: 12px;
+              margin-left: 5px;
+              border-radius: 3px;
+              font-weight: bold;
+              display: inline-block;
+              line-height: 2;
+              padding: 0 5px;
+            }
+          }
+        } 
       }
     }
   }

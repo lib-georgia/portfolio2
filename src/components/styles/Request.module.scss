@@ -1,3 +1,5 @@
+@import "../../pages/styles/_breakpoint";
+@import "../../pages/styles/_mixin";
 .request_inner {
   width: 500px;
   position: absolute;
@@ -9,6 +11,30 @@
   padding: 2%;
   box-sizing: border-box;
   border-radius: 5px;
+  text-align: center;
+  @include mq(sp){
+    width: 90%;
+  }
+  .avatar{
+    text-align: center;
+    margin: 0 auto 2% auto;
+    width: 60px;
+    height: 60px;
+  }
+  h2,p{
+    margin:0;
+    text-align: center;
+  }
+  h2{
+    font-size:20px;
+    margin:0 0 2% 0;
+  }
+  p{
+    font-size:16px
+  }
+  img{
+    margin-top: 2%;
+  }
   .answer_bx {
     overflow: hidden;
     div {
@@ -18,7 +44,7 @@
       width: 48%;
       margin-top: 3%;
       padding: 10px 0;
-      border-radius: 5px;
+      border-radius: 3px;
       &:hover {
         opacity: 0.7;
         cursor: pointer;
@@ -26,11 +52,23 @@
     }
     .left {
       float: left;
-      background: #f00;
+      background: #fb6b61;
     }
     .right {
       float: right;
       background: #33cc99;
+    }
+  }
+  .closeBtn{
+    text-align: center;
+    color: #111;
+    width: fit-content;
+    clear: both;
+    padding: 1% 2%;
+    margin: 2% auto 0 auto;
+    &:hover{
+      opacity:0.7;
+      cursor:pointer;
     }
   }
 }

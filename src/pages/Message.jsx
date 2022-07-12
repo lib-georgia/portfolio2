@@ -9,15 +9,13 @@ import { db } from '../firebase';
 
 const Message = () => {
     const { user } = useAuthContext();
-    
+    const uid = user.uid;
     const [message, setMessage] = useState("");
     const inputMessage = useCallback((event) => { setMessage(event.target.value) }, [setMessage]);
 
     const [friends, setFriends] = useState("");
-    console.log(friends)
     useEffect(() => {
         if (user !== "") {
-            const uid = user.uid;
             db.collection("user").doc(uid).collection("friend").get().then((query) => {
                 const friend = [];
                 query.forEach((doc) => {
@@ -30,13 +28,12 @@ const Message = () => {
                 console.log(`データの取得に失敗しました (${error})`);
               });
        }
-    }, [user])
+    }, [user,uid])
 
     const [messages, setMessages] = useState("");
     const [choiceFriendId, setChoiceFriendId] = useState("");
     useEffect(() => {
         if (user !== "" && choiceFriendId !== "") {
-            const uid = user.uid;
             db.collection("user").doc(uid).collection("friend").doc(choiceFriendId).collection('message').get().then((query) => {
                 var message = [];
                 query.forEach((doc) => {
@@ -49,9 +46,8 @@ const Message = () => {
                 console.log(`データの取得に失敗しました (${error})`);
               });
        }
-    }, [user,choiceFriendId])
+    }, [user,uid,choiceFriendId])
     
-
     if (!user) {
         window.location.href="/signin";
     } else {

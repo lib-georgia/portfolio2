@@ -10,6 +10,7 @@ import Style from './styles/FriendList.module.scss';
 const FriendList = memo((props) => {
     const { requestFriend,friendBtn,menuToggle } = props;
     const { user } = useAuthContext();
+    const uid = user.uid;
     const closeMenuBtn = () => { friendBtn(); menuToggle(); }
     const [friendId, setFriendId] = useState("");
     const inputFriendId = useCallback((event) => { setFriendId(event.target.value) }, [setFriendId]);
@@ -38,76 +39,86 @@ const FriendList = memo((props) => {
 
     const [request, setRequest] = useState("");
     useEffect(() => {
-        if (user !== "") {
-            const uid = user.uid;
-            db.collection("user").doc(uid).collection("request").get().then((query) => {
-                const friend = [];
-                query.forEach((doc) => {
-                    const data = doc.data();
-                    friend.push({friendId: doc.id, name: data.requestFriendName,date:data.requestDate});
-                });
-                setRequest(friend);
-              })
-              .catch((error)=>{
-                console.log(`データの取得に失敗しました (${error})`);
-              });
-       }
-    }, [user])
+        db.collection("user").doc(uid).collection("request").get().then((query) => {
+            const friend = [];
+            query.forEach((doc) => {
+                const data = doc.data();
+                friend.push({friendId: doc.id, name: data.requestFriendName,date:data.requestDate,requestImages:data.requestImages});
+            });
+            setRequest(friend);
+          })
+          .catch((error)=>{
+            console.log(`データの取得に失敗しました (${error})`);
+          });
+    }, [uid])
 
     const [friends, setFriends] = useState("");
     useEffect(() => {
+        db.collection("user").doc(uid).collection("friend").get().then((query) => {
+            const friend = [];
+            query.forEach((doc) => {
+                const data = doc.data();
+                friend.push({friendId: doc.id, name: data.name,images:data.images});
+            });
+            setFriends(friend);
+          })
+          .catch((error)=>{
+            console.log(`データの取得に失敗しました (${error})`);
+          });
+    }, [uid])
+    
+    const [myName, setMyName] = useState(""),
+        [myImages, setMyImages] = useState("");
+    useEffect(() => {
         if (user !== "") {
-            const uid = user.uid;
-            db.collection("user").doc(uid).collection("friend").get().then((query) => {
-                const friend = [];
-                query.forEach((doc) => {
-                    const data = doc.data();
-                    friend.push({friendId: doc.id, name: data.name});
-                });
-                setFriends(friend);
-              })
-              .catch((error)=>{
-                console.log(`データの取得に失敗しました (${error})`);
-              });
-       }
-    }, [user])
-
+            db.collection('user').doc(uid).get().then((doc) => {
+                const data = doc.data();
+                setMyName(data.name);
+                setMyImages(data.images);
+            }).catch((error) => {
+                console.log(`データを取得できませんでした (${error})`);
+            });
+        }
+    }, [user, uid])
 
     return (
         <div className={Style.friendLst}>
             <div className={Style.inner}>
-            <ul>
-            <li className={Style.friendSearch}>
-                <TextBox className={'inputFriend'} label={'IDで友だち検索'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={friendId} onChange={inputFriendId} />
-                <span className="material-icons-outlined" onClick={() => { props.showSearchFriend(friendId); setShowFindFriend(true)}}>search</span>
-            </li>
-            {showFindFriend && (
-                <li className={Style.findFriend}>
-                    <h2>{props.findFriendName}</h2>
-                    <div onClick={() => { friendRequest(friendId, props.name, props.uid, date); setSurveillance(true);}}><span className="material-icons-outlined">send</span>リクエスト</div>
-                </li>
-            )}
-            {request.length > 0 && <li className={Style.friendLstTtl}>リクエスト</li>}
-            {request.length > 0 && (
-                request.map((list) => (
-                    <li key={list.friendId} className={Style.friendList} onClick={() => requestFriend(list.friendId)}>
-                        <Stack direction="row" spacing={2} className={Style.avatar_bx}>
-                            <Avatar src="/static/images/avatar/1.jpg" className={Style.avatar} />
-                        </Stack>
-                        <p>{list.name}</p>
+                <ul>
+                    <li className={Style.friendSearch}>
+                        <TextBox className={'inputFriend'} label={'IDで友だち検索'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={friendId} onChange={inputFriendId} />
+                        <span className="material-icons-outlined" onClick={() => { props.showSearchFriend(friendId); setShowFindFriend(true) }}>search</span>
                     </li>
-                ))
-            )}
-            <li className={Style.friendLstTtl}>友だち</li>
-            {friends.length > 0 && (
-                friends.map((list) => (
-                    <li key={list.friendId} onClick={() => { props.onClick(list.friendId); closeMenuBtn()}} className={Style.friendList}>
-                        <Stack direction="row" spacing={2} className={Style.avatar_bx}>
-                            <Avatar src="/static/images/avatar/1.jpg" className={Style.avatar} />
-                        </Stack>
-                        <p>{list.name}</p>
-                    </li>
-                ))
+                    {showFindFriend && (
+                        <li className={Style.friendList}>
+                            <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                            <Avatar src={props.findFriendImages ? props.findFriendImages.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
+                            </Stack>
+                            <p>{props.findFriendName}</p>
+                            <span className="material-icons-outlined" onClick={() => { friendRequest(friendId, date, uid, myName, myImages); setSurveillance(true); }}>send</span>
+                        </li>
+                    )}
+                    {request.length > 0 && <li className={Style.friendLstTtl}>リクエスト</li>}
+                    {request.length > 0 && (
+                        request.map((list) => (
+                            <li key={list.friendId} className={Style.friendList} onClick={() => requestFriend(list.friendId)}>
+                                <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                                <Avatar src={list.requestImages ? list.requestImages.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
+                                </Stack>
+                                <p>{list.name}</p>
+                            </li>
+                        ))
+                    )}
+                    <li className={Style.friendLstTtl}>友だち</li>
+                    {friends.length > 0 && (
+                        friends.map((list) => (
+                            <li key={list.friendId} onClick={() => { props.onClick(list.friendId); closeMenuBtn() }} className={Style.friendList}>
+                                <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                                    <Avatar src={list.images ? list.images.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
+                                </Stack>
+                                <p>{list.name}</p>
+                            </li>
+                        ))
                     )}
                 </ul>
                 <div className={Style.closeBtn} onClick={closeMenuBtn}>閉じる</div>

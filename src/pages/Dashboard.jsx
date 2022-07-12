@@ -10,6 +10,7 @@ import Style from './styles/Dashboard.module.scss';
 
 const Dashboard = () => {  
   const { user } = useAuthContext();
+  const uid = user.uid;
   const [mapColor, setMapColor] = useState(mapColorRight);
   const [defaultZoom, setDefaultZoom] = useState(1);
   const defaultProps = {zoom:defaultZoom};
@@ -78,7 +79,17 @@ const Dashboard = () => {
     } else {
       return false;
     }
-  },[lat, lng, lastTimeLat, lastTimeLng, user,share])
+  }, [lat, lng, lastTimeLat, lastTimeLng, user, share])
+  
+  const lastLocation = (nowTime) => {
+    db.collection('user').doc(user.uid).set({
+      lastShareTime: nowTime
+    }, { merge: true }).then(() => {
+      console.log('map register')
+    }).catch(() => {
+      console.log('none...')
+    })
+}
 
   const tokyo = {lat:Number(35.4122),lng:Number(139.4130)}
   const [centerPosition, setCenterPosition] = useState(tokyo)
@@ -124,7 +135,7 @@ const Dashboard = () => {
   const [friendsLocation, setFriendsLocation] = useState("");
 
 useEffect(() => {
-  db.collection("user").doc(user.uid).collection('friend').get().then((query) => {
+  db.collection("user").doc(uid).collection('friend').get().then((query) => {
     const id = [];
     query.forEach((doc) => {
       id.push(doc.id);
@@ -134,7 +145,7 @@ useEffect(() => {
   .catch((error)=>{
     console.log(`データの取得に失敗しました (${error})`);
   });
-},[user])
+},[user,uid])
 
   useEffect(() => {
     const NumberOfTimes = friendsId.length;
@@ -176,6 +187,15 @@ useEffect(() => {
       setOpenProfile(true);
     }
   }
+  const [showFriend, setShowFriend] = useState(false);
+  const friendBtn = () => {
+    if (showFriend === true) {
+      setShowFriend(false)
+      setActive(false);
+    } else {
+      setShowFriend(true)
+    }
+  }
 
   const myLocation = () => {
     if (lat !== null || lng !== null) {
@@ -203,7 +223,6 @@ useEffect(() => {
 
   const [choiceFriendId, setChoiceFriendId] = useState("");
   useEffect(() => {
-    const uid = user.uid;
     if (messages !== "") {
       db.collection("user").doc(uid).collection("friend").doc(choiceFriendId).get().then((doc)=>{
         if (doc.exists) {
@@ -219,11 +238,10 @@ useEffect(() => {
     } else {
       return false;
     }
-  }, [user, messages, choiceFriendId])
+  }, [user,uid, messages, choiceFriendId])
   
   useEffect(() => {
-      if (user !== "" && choiceFriendId !== "") {
-          const uid = user.uid;
+    if (user !== "" && choiceFriendId !== "") {
           db.collection("user").doc(uid).collection("friend").doc(choiceFriendId).collection('message').orderBy("sendNumber", "asc").limit(20).onSnapshot((snapshot) => {
             const myArray = [];
             snapshot.forEach((doc) => {
@@ -241,7 +259,7 @@ useEffect(() => {
       } else {
           return false;
       }
-  },[user,choiceFriendId])
+  },[user,uid,choiceFriendId])
 
   const [choiceMapMode, setChoiceMapMode] = useState(false);
   const closeMessage = () => {
@@ -253,7 +271,8 @@ useEffect(() => {
   }
 
   const [openSearchFriend, setSearchFriend] = useState(false);
-  const [findFriendName, setFindFriendName] = useState("");
+  const [findFriendName, setFindFriendName] = useState(""),
+    [findFriendImages,setFindFriendImages] = useState("");
   const showSearchFriend = (friendId) => {
     if (openSearchFriend === true) {
       setSearchFriend(false)
@@ -261,6 +280,7 @@ useEffect(() => {
       db.collection("user").doc(friendId).get().then((doc) => {
         const data = doc.data();
         setFindFriendName(data.name);
+        setFindFriendImages(data.images);
         setSearchFriend(true)
       })
     }
@@ -321,16 +341,6 @@ useEffect(() => {
     setActive(!active)
 }
 
-  const [showFriend, setShowFriend] = useState(false);
-  const friendBtn = () => {
-    if (showFriend === true) {
-      setShowFriend(false)
-      setActive(false);
-    } else {
-      setShowFriend(true)
-    }
-  }
-
   if (!user) {
     window.location.href="/signin";
   } else {
@@ -345,11 +355,14 @@ useEffect(() => {
               showProfile={showProfile}
               showSearchFriend={showSearchFriend}
               findFriendName={findFriendName}
+              findFriendImages={findFriendImages}
               name={userData.name}
               uid={userData.uid}
               requestFriend={requestFriend}
               onClick={choiceFriendLocation}
               myLocation={myLocation}
+              setOpenMessage={setOpenMessage}
+              setChoiceFriendId={setChoiceFriendId}
             />
             <div style={{ height: '100vh', width: '100%' }}>
               <GoogleMapReact
@@ -363,7 +376,7 @@ useEffect(() => {
                 <Marker className={Style.adminPosition} lat={lat} lng={lng} name="あなた" color="#e96650" onMarkerClick={handleMarkerClick} />
                 {friendsLocation.length > 0 && (
                   friendsLocation.map((list, index) => (
-                    <FriendLocation setChoiceFriendId={setChoiceFriendId} key={index} uid={list.uid} lastShareTime={list.lastShareTime} nowTime={nowTime} lat={list.lat} lng={list.lng} name={list.name} bloodType={list.bloodType} nationality={list.nationality} passportNumber={list.passportNumber} currentKey={currentKey} index={index} />                   
+                    <FriendLocation setChoiceFriendId={setChoiceFriendId} key={index} uid={list.uid} lastShareTime={list.lastShareTime} nowTime={nowTime} lat={list.lat} lng={list.lng} name={list.name} bloodType={list.bloodType} nationality={list.nationality} passportNumber={list.passportNumber} currentKey={currentKey} index={index} />
                   )))}
                 {detailAccount && <AdminDetail name={userData.name} bloodType={userData.bloodType} nationality={userData.nationality} passportNumber={userData.passportNumber} lat={lat} lng={lng} />}
               </GoogleMapReact>
@@ -372,7 +385,7 @@ useEffect(() => {
                 if (share === false) {
                   return <div className={Style.startShare} onClick={() => setShare(true)}>共有する</div>
                 } else {
-                  return <div className={Style.stopShare} onClick={() => setShare(false)}>共有しない</div>
+                  return <div className={Style.stopShare} onClick={() => { setShare(false); lastLocation(nowTime)}}>共有しない</div>
                 }
                 })()}
                 {choiceMapMode ?
@@ -407,10 +420,10 @@ useEffect(() => {
           <HeaderMenu showProfile={showProfile} myLocation={myLocation} menuBtn={menuBtn} friendBtn={friendBtn} classToggle={classToggle} signOut={signOut} choiceFriendId={choiceFriendId} />
         )}
         {showFriend && (
-          <FriendList friendBtn={friendBtn} requestFriend={requestFriend} menuBtn={menuBtn} menuToggle={menuToggle} classToggle={classToggle} onClick={choiceFriendLocation} />
+          <FriendList friendBtn={friendBtn} requestFriend={requestFriend} menuBtn={menuBtn} menuToggle={menuToggle} classToggle={classToggle} onClick={choiceFriendLocation} showSearchFriend={showSearchFriend} findFriendName={findFriendName} findFriendImages={findFriendImages} />
         )}
       </div>
-  )
+    )
   }
 }
 

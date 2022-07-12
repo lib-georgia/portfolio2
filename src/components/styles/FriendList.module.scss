@@ -1,12 +1,5 @@
-$breakpoints: (
-  "sp": "(max-width: 750px)",
-  "pc": "(min-width: 751px)",
-);
-@mixin mq($breakpoint: sp) {
-  @media #{map-get($breakpoints, $breakpoint)} {
-    @content;
-  }
-}
+@import "../../pages/styles/_breakpoint";
+@import "../../pages/styles/_mixin";
 .friendLst {
   position: fixed;
   top: 0;
@@ -14,7 +7,7 @@ $breakpoints: (
   bottom: 0;
   left: 0;
   background: rgb(0, 0, 0, 0.8);
-  z-index: 99;
+  z-index: 999;
   .inner {
     margin: 0 auto;
     background: #fff;
@@ -26,9 +19,11 @@ $breakpoints: (
     @include mq(pc) {
       width: 500px;
     }
+    @include mq(tab) {
+      width: 500px;
+    }
     @include mq(sp) {
       width: 95%;
-      max-width: 500px;
       background: #fff;
       padding: 3% 0;
       box-sizing: border-box;
@@ -48,7 +43,10 @@ $breakpoints: (
     li {
       text-align: left;
       overflow: hidden;
-      margin-bottom: 20px;
+      padding: 5px;
+      box-sizing: border-box;
+      border-radius: 3px;
+      margin-bottom: 5px;
       div {
         float: left;
         width: 40px;
@@ -61,17 +59,17 @@ $breakpoints: (
         line-height: 40px;
       }
     }
-    li.friendLstTtl {
-      margin-top: 10px;
-    }
     li.friendSearch {
       position: relative;
       form {
-        width: 85%;
+        width: 90%;
         overflow: hidden;
         float: left;
         div {
           width: 100%;
+          div > div > input{
+            padding: 10px 15px;
+          }
         }
       }
       span {
@@ -84,12 +82,26 @@ $breakpoints: (
         right: 0;
         transform: translateY(-50%) translateX(-50%);
         -webkit-transform: translateY(-50%);
-        padding: 3%;
+        padding: 1%;
         box-sizing: border-box;
         &:hover {
           cursor: pointer;
           opacity: 0.8;
         }
+      }
+    }
+    li.friendList{
+      background: #f0f0f0;
+      position:relative;
+      span{
+        position: absolute;
+        right: 9px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: block;
+        padding: 13px 5px;
+        box-sizing: border-box;
       }
     }
   }
@@ -98,8 +110,9 @@ $breakpoints: (
     opacity: 0.7;
   }
   .closeBtn {
-    width: 50%;
-    min-width: 300px;
+    width: 90%;
+    min-width: 100px;
+    border-radius: 3px;
     background: #fb6b61;
     text-align: center;
     color: #fff;

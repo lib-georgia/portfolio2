@@ -71,12 +71,11 @@ exports.editUserData = functions.https.onRequest((req, res) => {
         try {
             return db.collection('user').doc(req.body.uid).set({
                 name: req.body.name,
-                email: req.body.email,
                 nationality: req.body.nationality,
                 bloodType:req.body.bloodType,
                 images: req.body.images,
                 passportNumber: req.body.passportNumber
-            }, { merge: true }).then(() => {
+            },{merge:true}).then(() => {
                 console.log('set firebase!');
                 sendResponse(res, 200, { editUserData: 'completed!' });  
             })
@@ -101,8 +100,16 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
                 date: req.body.date,
                 sendNumber: req.body.sendNumber
             }, { merge: true }).then(() => {
-                console.log('send message!');
-                sendResponse(res, 200, { editUserData: 'completed!' });  
+                db.collection('user').doc(req.body.friendId).collection('friend').doc(req.body.uid).collection('message').doc().set({
+                    message: req.body.message,
+                    time: req.body.time,
+                    sendParson: req.body.uid,
+                    date: req.body.date,
+                    sendNumber: req.body.sendNumber
+                }, { merge: true }).then(() => {
+                    console.log('send message!');
+                    sendResponse(res, 200, { editUserData: 'completed!' });    
+                })
             })
         } catch (err) {
             console.log(err);
@@ -120,7 +127,8 @@ exports.friendRequest = functions.https.onRequest((req, res) => {
         try {
             return db.collection('user').doc(req.body.friendId).collection('request').doc(req.body.uid).set({
                 requestDate: req.body.date,
-                requestFriendName: req.body.name
+                requestFriendName: req.body.name,
+                requestImages: { id: req.body.images.id, path: req.body.images.path}
             }, { merge: true }).then(() => {
                 console.log('send message!');
                 sendResponse(res, 200, { editUserData: 'completed!' });  
@@ -158,10 +166,12 @@ exports.approvalRequest = functions.https.onRequest((req, res) => {
         }
         try {
             db.collection('user').doc(`${req.body.uid}`).collection('friend').doc(`${req.body.requestFriendId}`).set({
-                name: req.body.requestName
+                name: req.body.requestName,
+                images: { id: req.body.requestImages.id, path: req.body.requestImages.path}
             },{merge:true}).then(() => {
                 db.collection('user').doc(`${req.body.requestFriendId}`).collection('friend').doc(`${req.body.uid}`).set({
-                    name: req.body.myName 
+                    name: req.body.myName,
+                    images: { id: req.body.myImages.id, path: req.body.myImages.path}
                 }).then(() => {
                     db.collection('user').doc(`${req.body.uid}`).collection('request').doc(`${req.body.requestFriendId}`).delete().then(() => {
                         console.log('completed approvalRequest');
@@ -173,5 +183,5 @@ exports.approvalRequest = functions.https.onRequest((req, res) => {
             console.log(err);
             sendResponse(res, 500, { err: err });
         }
-    })    
+    })
 })

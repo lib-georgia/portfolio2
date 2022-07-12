@@ -9,33 +9,29 @@ import Style from './styles/Profile.module.scss';
 import { db,storage } from '../firebase';
 import Resizer from "react-image-file-resizer";
 import {LineShareButton,LineIcon} from "react-share";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const Profile = memo((props) => {
     const { user } = useAuthContext();
+    const uid = user.uid;
     const [thumbnail, setThumbnail] = useState(null);
     const [filename, setFilename] = useState(null);
     const [images, setImages] = useState([]);
     const [name, setName] = useState(""),
-        [email, setEmail] = useState(""),
         [nationality, setNationality] = useState(""),
         [bloodType, setBloodType] = useState(""),
         [passportNumber, setPassportNumber] = useState("");
     const [editBtn, setEditBtn] = useState(false);
     const inputName = useCallback((event) => { setName(event.target.value);setEditBtn(true); }, [setName]);
-    const inputEmail = useCallback((event) => { setEmail(event.target.value); setEditBtn(true); }, [setEmail]);
     const inputNationality = useCallback((event) => { setNationality(event.target.value); setEditBtn(true); }, [setNationality]);
     const inputBloodType = useCallback((event) => { setBloodType(event.target.value); setEditBtn(true); }, [setBloodType]);
     const inputPassportNumber = useCallback((event) => { setPassportNumber(event.target.value); setEditBtn(true); }, [setPassportNumber]);
 
-    const [uid, setUid] = useState("");
     useEffect(() => {
         if (user !== "") {
-            const uid = user.uid;
            db.collection('user').doc(uid).get().then((doc)=>{
                const data = doc.data();
-               setUid(data.uid);
                setName(data.name);
-               setEmail(data.email);
                setNationality(data.nationality);
                setBloodType(data.bloodType);
                setPassportNumber(data.passportNumber);
@@ -45,7 +41,7 @@ const Profile = memo((props) => {
               console.log(`データを取得できませんでした (${error})`);
           });
        }
-    },[user])
+    },[user,uid])
 
     const resizeFile = (file) => {
         return new Promise((resolve) => {
@@ -121,6 +117,7 @@ const Profile = memo((props) => {
     }
     const URL = 'https://geolocation-18aa2.web.app/signup';
     const QUOTE = `友だちIDが届きました。Geolocationで検索して友だちになりましょう。${uid}`;
+
         return (
             <div className={Style.profilePage_bx}>
                 <div className={Style.sidebar_bx}>
@@ -142,14 +139,13 @@ const Profile = memo((props) => {
                                 </label>
                             </div>
                         </Stack>
-                        {/* <span className={Style.copyMyId} onClick={() => copyText(uid)}>自分のIDをコピー</span> */}
-                        <LineShareButton className={Style.copyMyId} url={URL} title={QUOTE}><p>自分のIDをLINEで共有</p><LineIcon size={24} round /></LineShareButton>
+                        <CopyToClipboard text={uid} onCopy={() => alert(`クリップボードに「IDをコピーしました。`)}><div className={Style.copyMyId}><p>IDコピー<span>クリック</span></p></div></CopyToClipboard>
+                        <LineShareButton className={Style.copyMyId} url={URL} title={QUOTE}><p>IDをLINEで共有</p><LineIcon size={24} round /></LineShareButton>
                         <TextBox className={'inputBx'} label={'Full Name（フルネーム）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={name} onChange={inputName}/>
-                        <TextBox className={'inputBx'} label={'Email（メールアドレス）'} type={"email"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={email} onChange={inputEmail}/>
                         <TextBox className={'inputBx'} label={'Nationality（国籍）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={nationality} onChange={inputNationality} />
                         <TextBox className={'inputBx'} label={'Blood type（血液型）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={bloodType} onChange={inputBloodType} />
                         <TextBox className={'inputBx'} label={'Passport Number（パスポート番号）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={passportNumber} onChange={inputPassportNumber}/>
-                        {editBtn ? <div className={Style.editBtn_bx}><div className={Style.left} onClick={closeMenuBtn}>閉じる</div><div className={Style.right} onClick={() => editUserData(name, email, nationality, bloodType, passportNumber, uid, images)}>決定</div></div> : <div className={Style.editBtn} onClick={closeMenuBtn}>閉じる</div>}
+                        {editBtn ? <div className={Style.editBtn_bx}><div className={Style.left} onClick={closeMenuBtn}>閉じる</div><div className={Style.right} onClick={() => editUserData(name, nationality, bloodType, passportNumber, uid, images)}>決定</div></div> : <div className={Style.editBtn} onClick={closeMenuBtn}>閉じる</div>}
                     </div>
                 </div>
             </div>

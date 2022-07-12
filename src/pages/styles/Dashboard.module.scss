@@ -1,13 +1,5 @@
-$breakpoints: (
-  "sp": "(max-width: 750px)",
-  "tab": "screen and (min-width: 751px) and (max-width: 1024px)",
-  "pc": "(min-width: 1025px)",
-);
-@mixin mq($breakpoint: sp) {
-  @media #{map-get($breakpoints, $breakpoint)} {
-    @content;
-  }
-}
+@import "./_breakpoint";
+@import "./_mixin";
 .choiceColorMode {
   list-style-type: none;
   position: absolute;

@@ -17,7 +17,6 @@ const isValidRequiredInput = (...args) => {
 const headers = new Headers();
 headers.set('Content-type', 'application/json');
 
-
 export const signUp = (name, email,password,confirmPassword) => {
     return async () => {
         if (name === "" || email === "" || password === "" || confirmPassword === "") {
@@ -108,18 +107,26 @@ export const signIn = (email,password) => {
     }
 }
 
-export const editUserData = async (name, email, nationality, bloodType, passportNumber,uid,images) => {
+export const editUserData = async (name, nationality, bloodType, passportNumber, uid, images) => {
+    if (nationality === undefined) {
+        nationality = ""
+    }
+    if (bloodType === undefined) {
+        bloodType = ""
+    }
+    if (passportNumber === undefined) {
+        passportNumber = ""
+    }
     const response = await fetch("https://us-central1-geolocation-18aa2.cloudfunctions.net/editUserData/v1/editUserData", {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({
-            uid:uid,
             name: name,
-            email: email,
             nationality: nationality,
-            bloodType:bloodType,
-            images: images,
-            passportNumber: passportNumber
+            bloodType: bloodType,
+            passportNumber: passportNumber,
+            uid: uid,
+            images: images
         })
     })
     const editUserDataResponse = await response.json()
@@ -130,7 +137,6 @@ export const editUserData = async (name, email, nationality, bloodType, passport
         alert('編集が失敗しました。')
     }
 }
-
 
 export const sendMessage = async (uid, newMessage, choiceFriendId, sendNumber, time, date) => {
     if (newMessage === "" || choiceFriendId === "") {
@@ -145,7 +151,7 @@ export const sendMessage = async (uid, newMessage, choiceFriendId, sendNumber, t
                 friendId: choiceFriendId,
                 time: time,
                 date: date,
-                sendNumber:sendNumber
+                sendNumber:Number(sendNumber)
             })
         })
         const sendMessage = await response.json()
@@ -153,14 +159,15 @@ export const sendMessage = async (uid, newMessage, choiceFriendId, sendNumber, t
     }
 }
 
-export const friendRequest = async (friendId,name,uid,date) => {
+export const friendRequest = async (friendId, date,uid,myName,myImages) => {
     const response = await fetch("https://us-central1-geolocation-18aa2.cloudfunctions.net/friendRequest/v1/friendRequest", {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({
             uid:uid,
             friendId: friendId,
-            name: name,
+            name: myName,
+            images:myImages,
             date:date
         })
     })
@@ -169,33 +176,39 @@ export const friendRequest = async (friendId,name,uid,date) => {
 }
 
 export const deleteRequest = async (requestFriendId, uid) => {
-    const response = [];
-    await fetch("https://us-central1-geolocation-18aa2.cloudfunctions.net/deleteRequest/v1/deleteRequest", {
+    const response = await fetch("https://us-central1-geolocation-18aa2.cloudfunctions.net/deleteRequest/v1/deleteRequest", {
         method: 'DELETE',
         headers: headers,
         body: JSON.stringify({
-            requestFriendId: requestFriendId,//req.body.requestId
-            uid:uid//req.body.uid
+            requestFriendId: requestFriendId,
+            uid:uid
         })
-    }).then((res) => {
-        response.push(res.status)
     })
-    return response
+    const deleteRejectionRequest = await response.json()
+    if (deleteRejectionRequest.body === '"completed! deleteRequest"') {
+        alert('拒否しました。')
+        window.location.reload()
+    }
+    return JSON.parse(deleteRejectionRequest.body)
 }
 
-export const approvalRequest = async (requestFriendId, requestName, uid,myName) => {
-    const [response, setResponse] = "";
-    await fetch("https://us-central1-geolocation-18aa2.cloudfunctions.net/approvalRequest/v1/approvalRequest", {
+export const approvalRequest = async (uid, requestFriendId, requestName, requestImages, myName, myImages) => {
+    const response = await fetch("https://us-central1-geolocation-18aa2.cloudfunctions.net/approvalRequest/v1/approvalRequest", {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({
             requestFriendId: requestFriendId,
-            uid:uid,
             requestName: requestName,
-            myName:myName
+            requestImages:requestImages,
+            uid:uid,
+            myName: myName,
+            myImages:myImages
         })
-    }).then((res) => {
-        setResponse(res.status)
     })
-    return response
+    const friendRequest = await response.json()
+    if (friendRequest.body === '"completed approvalRequest"') {
+        alert('承認しました。')
+        window.location.reload()
+    }
+    return JSON.parse(friendRequest.body)
 }

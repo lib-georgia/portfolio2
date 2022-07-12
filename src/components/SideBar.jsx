@@ -7,19 +7,20 @@ import { useAuthContext } from '../pages/AuthContext';
 import TextBox from './UIkit/TextBox'; 
 import { friendRequest } from '../apis';
 import Logo from '../asset/logo.png';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const SideBar = memo((props) => {
     const { user } = useAuthContext();
+    const uid = user.uid;
     const [isOpenFriendList, setIsOpenFriendList] = useState(false);
     const [friends, setFriends] = useState("");
     useEffect(() => {
         if (user !== "") {
-            const uid = user.uid;
             db.collection("user").doc(uid).collection("friend").get().then((query) => {
                 const friend = [];
                 query.forEach((doc) => {
                     const data = doc.data();
-                    friend.push({friendId: doc.id, name: data.name});
+                    friend.push({friendId: doc.id, name: data.name,images:data.images,lat:data.lat});
                 });
                 setFriends(friend);
               })
@@ -27,17 +28,16 @@ const SideBar = memo((props) => {
                 console.log(`データの取得に失敗しました (${error})`);
               });
        }
-    }, [user])
+    }, [user,uid])
 
     const [request, setRequest] = useState("");
     useEffect(() => {
         if (user !== "") {
-            const uid = user.uid;
             db.collection("user").doc(uid).collection("request").get().then((query) => {
                 const friend = [];
                 query.forEach((doc) => {
                     const data = doc.data();
-                    friend.push({friendId: doc.id, name: data.requestFriendName,date:data.requestDate});
+                    friend.push({friendId: doc.id, name: data.requestFriendName,date:data.requestDate,images:data.requestImages});
                 });
                 setRequest(friend);
               })
@@ -45,7 +45,7 @@ const SideBar = memo((props) => {
                 console.log(`データの取得に失敗しました (${error})`);
               });
        }
-    }, [user])
+    }, [user,uid])
 
     const friendToggleBtn = () => {
         if (isOpenFriendList === false) {
@@ -70,18 +70,46 @@ const SideBar = memo((props) => {
         if (friendId !== "" && showFindFriend === true && surveillance === true) {
             db.collection('user').doc(friendId).collection('request').onSnapshot((snapshot) => {
                 snapshot.forEach((doc) => {
-                    if (doc.id === props.uid) {
+                    if (doc.id === uid) {
                         setFriendId("");
                         setShowFindFriend(false);
-                        alert('完了')
+                        alert('リクエストを送信しました。')
                     }
                 });
 
             });
         }
-    },[showFindFriend,friendId,props.uid,surveillance])
+    },[showFindFriend, friendId, uid, surveillance])
 
-    const { requestFriend } = props;
+    const { requestFriend, findFriendName } = props;
+
+    const [myName, setMyName] = useState(""),
+        [myImages, setMyImages] = useState("");
+    useEffect(() => {
+        if (user !== "") {
+           db.collection('user').doc(uid).get().then((doc)=>{
+               const data = doc.data();
+               setMyName(data.name);
+               setMyImages(data.images);
+          })
+          .catch( (error) => {
+              console.log(`データを取得できませんでした (${error})`);
+          });
+       }
+    },[user,uid])
+    
+    const choiceFriendLocation = (friendId) => {
+        db.collection('user').doc(friendId).get().then((doc)=>{
+            const data = doc.data();
+            if (data.lat) {
+                props.onClick(friendId)
+            } else {
+                alert('位置情報がありません。')
+            }
+       }).catch((error) => {
+           console.log(`データを取得できませんでした (${error})`);
+       });
+    }
 
     return (
         <div className={Style.sidebar_bx}>
@@ -89,9 +117,9 @@ const SideBar = memo((props) => {
                 <div className={Style.sidebar_left}>
                     <div className={Style.logo}><img src={Logo} alt="logo" /></div>
                 <div className={Style.linkPeople}>
-                        <div onClick={friendToggleBtn}><span className="material-icons-outlined">people</span><p>友だち</p></div>
-                        <div onClick={props.showProfile}><span className="material-icons-outlined">account_circle</span><p>プロフィール</p></div>
-                        <div onClick={props.myLocation}><span className="material-icons-outlined">account_circle</span><p>自分の位置</p></div>
+                    <div onClick={friendToggleBtn}><span className="material-icons-outlined">people</span><p>友だち</p></div>
+                    <div onClick={props.showProfile}><span className="material-icons-outlined">account_circle</span><p>プロフィール</p></div>
+                    <div onClick={props.myLocation}><span className="material-icons-outlined">pin_drop</span><p>自分の位置</p></div>
                 </div>
                 <div className={Style.getLocation}>
                     <span className="material-icons-outlined" onClick={props.signOut}>logout</span>
@@ -106,8 +134,8 @@ const SideBar = memo((props) => {
                             </li>
                             {showFindFriend && (
                                 <li className={Style.findFriend}>
-                                    <h2>{props.findFriendName}</h2>
-                                    <div onClick={() => { friendRequest(friendId, props.name, props.uid, date); setSurveillance(true);}}><span className="material-icons-outlined">send</span>リクエスト</div>
+                                    <h2>{findFriendName}</h2>
+                                    <div onClick={() => { friendRequest(friendId, date, uid, myName, myImages); setSurveillance(true);}}><span className="material-icons-outlined">send</span>リクエスト</div>
                                 </li>
                             )}
                             {request.length > 0 && <li className={Style.friendLstTtl}>リクエスト</li>}
@@ -115,7 +143,7 @@ const SideBar = memo((props) => {
                                 request.map((list) => (
                                     <li key={list.friendId} className={Style.friendList} onClick={() => requestFriend(list.friendId)}>
                                         <Stack direction="row" spacing={2} className={Style.avatar_bx}>
-                                            <Avatar src="/static/images/avatar/1.jpg" className={Style.avatar} />
+                                            {list.images ? <Avatar alt={list.images.id} src={list.images.path} className={Style.avatar} /> : <Avatar alt="photo" src="/static/images/avatar/1.jpg" className={Style.avatar} />}
                                         </Stack>
                                         <p>{list.name}</p>
                                     </li>
@@ -124,11 +152,14 @@ const SideBar = memo((props) => {
                             <li className={Style.friendLstTtl}>友だち</li>
                             {friends.length > 0 && (
                                 friends.map((list) => (
-                                    <li key={list.friendId} onClick={() => props.onClick(list.friendId)} className={Style.friendList}>
-                                        <Stack direction="row" spacing={2} className={Style.avatar_bx}>
-                                            <Avatar src="/static/images/avatar/1.jpg" className={Style.avatar} />
-                                        </Stack>
-                                        <p>{list.name}</p>
+                                    <li key={list.friendId} className={Style.friendList}>
+                                        <span className={Style.friendInfo} onClick={() => choiceFriendLocation(list.friendId)}>
+                                            <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                                                {list.images ? <Avatar alt={list.images.id} src={list.images.path} className={Style.avatar} /> : <Avatar alt="photo" src="/static/images/avatar/1.jpg" className={Style.avatar} />}
+                                            </Stack>
+                                            <p>{list.name}</p>
+                                        </span>
+                                        <span className={Style.menu} onClick={() => props.setChoiceFriendId(list.friendId)}><ChatIcon /></span>
                                     </li>
                                 ))
                             )}
