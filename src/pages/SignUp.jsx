@@ -6,6 +6,7 @@ import {SignUpSignInHeader} from '../components';
 import pcImage from '../asset/geolocationPcDisplay.png';
 import spImage from '../asset/geolocationSpDisplay.png';
 import Style from './styles/SignUp.module.scss';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const SignUp = () => {
   const [name, setName] = useState(""),
@@ -44,8 +45,7 @@ const SignUp = () => {
           <TextBox className={'inputBx'} label={'Password（パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={password} onChange={inputPassword} />
           <TextBox className={'inputBx'} label={'confirmPassword（確認用パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={confirmPassword} onChange={inputConfirmPassword} />
           <div className={Style.editBtn} onClick={signUp(name, email, password, confirmPassword)}>決定</div>
-          {/* <div className={Style.toSignUp_SignIn}><Link className={Style.authBx} to="/signin"><span className="material-icons-outlined">login</span><p>アカウントをお持ちの方</p></Link></div> */}
-          <div><Link className={Style.authBx} to="/signin"><span className="material-icons-outlined">login</span><p>アカウントをお持ちの方</p></Link></div>
+          <div className={Style.toSignUpSignIn}><Link className={Style.authBx} to="/signin"><span><LogoutIcon /></span><p>アカウントをお持ちの方</p></Link></div>
         </div>
       </div>
       </section>

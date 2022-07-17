@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import pcImage from '../asset/geolocationPcDisplay.png';
 import spImage from '../asset/geolocationSpDisplay.png';
 import Style from './styles/SignUp.module.scss';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Signin = () => {
     const [email, setEmail] = useState(""),
@@ -37,7 +38,7 @@ const Signin = () => {
             <TextBox className={'inputBx'} label={'Email（メールアドレス）'} type={"email"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={email} onChange={inputEmail}/>
             <TextBox className={'inputBx'} label={'Password（パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={password} onChange={inputPassword} />
             <div className={Style.editBtn} onClick={signIn(email, password)}>決定</div>
-            <div className={Style.toSignUpSignIn}><Link className={Style.authBx} to="/signup"><span className="material-icons-outlined">login</span><p>アカウント登録はこちら</p></Link></div>
+            <div className={Style.toSignUpSignIn}><Link className={Style.authBx} to="/signup"><span><LogoutIcon /></span><p>アカウント登録はこちら</p></Link></div>
           </div>
         </div>
       </section>

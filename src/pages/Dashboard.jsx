@@ -11,7 +11,7 @@ import Style from './styles/Dashboard.module.scss';
 
 const Dashboard = () => {  
   const { user } = useAuthContext();
-  const uid = user.uid;
+  console.log(user)
 
    // geoLocation
   const[mapSettingState,setMapSettingState] = useState({mapColor:mapColorRight,defaultZoom:16})
@@ -40,51 +40,55 @@ const Dashboard = () => {
   const nowTime = timeToString(timestamp.toDate());
 
   useEffect(() => {
-    db.collection("user").doc(user.uid).get().then((doc) => {
-      if (doc.exists) {
-        setState((prevState) => ({ ...prevState, userData: doc.data() }))
-      }
-      else {
-        console.log("404");
-      }
-    }).catch((error) => {
-      console.log(`データを取得できませんでした (${error})`);
-    });
-    db.collection("user").doc(user.uid).get().then((doc) => {
-      if (doc.exists) {
-        const data = doc.data();
-        setLastTimeLat(data.lat);
-        setLastTimeLng(data.lng);
-      }
-      else {
-        console.log("404");
-      }
-    }).catch((error) => {
-      console.log(`データを取得できませんでした (${error})`);
-    });
+    if (user !== null) {
+      db.collection("user").doc(user.uid).get().then((doc) => {
+        if (doc.exists) {
+          setState((prevState) => ({ ...prevState, userData: doc.data() }))
+        }
+        else {
+          console.log("404");
+        }
+      }).catch((error) => {
+        console.log(`データを取得できませんでした (${error})`);
+      });
+      db.collection("user").doc(user.uid).get().then((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          setLastTimeLat(data.lat);
+          setLastTimeLng(data.lng);
+        }
+        else {
+          console.log("404");
+        }
+      }).catch((error) => {
+        console.log(`データを取得できませんでした (${error})`);
+      }); 
+    }
   }, [user])
 
   useEffect(() => {
-    if (booleanState.share === true && ((lat !== null && lng !== null) || (lat !== lastTimeLat && lng !== lastTimeLng))) {
-      navigator.geolocation.watchPosition(position => {
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
-        db.collection('user').doc(user.uid).set({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }, { merge: true }).then(() => {
-          console.log('map register')
-        }).catch(() => {
-          console.log('none...')
-        })
-      }, () => {
-        alert('現在地を取得できません。')
-      }, {
-        enableHighAccuracy: true,
-        maximumAge: 1000
-      });
-    } else {
-      return false;
+    if (user !== null) {
+      if (booleanState.share === true && ((lat !== null && lng !== null) || (lat !== lastTimeLat && lng !== lastTimeLng))) {
+        navigator.geolocation.watchPosition(position => {
+          setLat(position.coords.latitude);
+          setLng(position.coords.longitude);
+          db.collection('user').doc(user.uid).set({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }, { merge: true }).then(() => {
+            console.log('map register')
+          }).catch(() => {
+            console.log('none...')
+          })
+        }, () => {
+          alert('現在地を取得できません。')
+        }, {
+          enableHighAccuracy: true,
+          maximumAge: 1000
+        });
+      } else {
+        return false;
+      } 
     }
   }, [lat, lng, lastTimeLat, lastTimeLng, user, booleanState])
   
@@ -136,18 +140,20 @@ const Dashboard = () => {
   
 
 
-useEffect(() => {
-  db.collection("user").doc(uid).collection('friend').get().then((query) => {
-    const id = [];
-    query.forEach((doc) => {
-      id.push(doc.id);
-    });
-    setState((prevState) => ({ ...prevState, friendsId: id }))
-  })
-  .catch((error)=>{
-    console.log(`データの取得に失敗しました (${error})`);
-  });
-},[user,uid])
+  useEffect(() => {
+    if (user !== null) {
+      db.collection("user").doc(user.uid).collection('friend').get().then((query) => {
+        const id = [];
+        query.forEach((doc) => {
+          id.push(doc.id);
+        });
+        setState((prevState) => ({ ...prevState, friendsId: id }))
+      })
+      .catch((error)=>{
+        console.log(`データの取得に失敗しました (${error})`);
+      }); 
+  }
+},[user])
 
   useEffect(() => {
     const NumberOfTimes = state.friendsId.length;
@@ -225,8 +231,8 @@ useEffect(() => {
 
 
   useEffect(() => {
-    if (state.messages !== "") {
-      db.collection("user").doc(uid).collection("friend").doc(choiceFriendId).get().then((doc)=>{
+    if (state.messages !== "" && user.uid !== null) {
+      db.collection("user").doc(user.uid).collection("friend").doc(choiceFriendId).get().then((doc)=>{
         if (doc.exists) {
           setOpenMessage(true);
         }
@@ -240,11 +246,11 @@ useEffect(() => {
     } else {
       return false;
     }
-  }, [user,uid, state,choiceFriendId])
+  }, [user, state,choiceFriendId])
   
   useEffect(() => {
     if (user !== "" && choiceFriendId !== "") {
-          db.collection("user").doc(uid).collection("friend").doc(choiceFriendId).collection('message').orderBy("sendNumber", "asc").limit(20).onSnapshot((snapshot) => {
+          db.collection("user").doc(user.uid).collection("friend").doc(choiceFriendId).collection('message').orderBy("sendNumber", "asc").limit(20).onSnapshot((snapshot) => {
             const myArray = [];
             snapshot.forEach((doc) => {
                 const data = doc.data();
@@ -261,7 +267,7 @@ useEffect(() => {
       } else {
           return false;
       }
-  },[user,uid,choiceFriendId])
+  },[user,choiceFriendId])
 
 
   const closeMessage = () => {
