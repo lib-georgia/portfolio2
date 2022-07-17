@@ -1,15 +1,16 @@
 import React,{useState,useCallback,useEffect,memo} from 'react';
-import { SideBar } from './index';
-import TextBox from './UIkit/TextBox';
-import { editUserData } from '../apis';
+import { SideBar } from '../index';
+import TextBox from '../TextBox/TextBox';
+import { editUserData } from '../../apis';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import { useAuthContext } from '../pages/AuthContext';
-import Style from './styles/Profile.module.scss';
-import { db,storage } from '../firebase';
+import { useAuthContext } from '../../pages/AuthContext';
+import Style from './Profile.module.scss';
+import { db,storage } from '../../firebase';
 import Resizer from "react-image-file-resizer";
 import {LineShareButton,LineIcon} from "react-share";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import AddIcon from '@mui/icons-material/Add';
 
 const Profile = memo((props) => {
     const { user } = useAuthContext();
@@ -119,23 +120,23 @@ const Profile = memo((props) => {
     const QUOTE = `友だちIDが届きました。Geolocationで検索して友だちになりましょう。${uid}`;
 
         return (
-            <div className={Style.profilePage_bx}>
-                <div className={Style.sidebar_bx}>
+            <div className={Style.profilePageBx}>
+                <div>
                     <SideBar  onCLick={() => props.setOpenProfile(false)} />
                 </div>
                 <div className={Style.profileEdit}>
                     <div className={Style.inner}>
-                        <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                        <Stack direction="row" spacing={2} className={Style.avatarBx}>
                             {(() => {
-                                if (images !== null ||images !== "" || images !== undefined) {
+                                if (images) {
                                     return <Avatar alt={images.id} src={images.path} className={Style.avatar} />
                                 } else {
                                     return <Avatar alt={filename} src={thumbnail} className={Style.avatar} />
                                 }
                             })()}
-                            <div className={Style.Register_images_bx}>
+                            <div className={Style.RegisterImagesBx}>
                                 <label>
-                                    <input type="file" name="file" onChange={onChange} /><span className="material-icons-outlined">add</span>
+                                    <input type="file" name="file" onChange={onChange} /><span><AddIcon /></span>
                                 </label>
                             </div>
                         </Stack>
@@ -145,7 +146,7 @@ const Profile = memo((props) => {
                         <TextBox className={'inputBx'} label={'Nationality（国籍）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={nationality} onChange={inputNationality} />
                         <TextBox className={'inputBx'} label={'Blood type（血液型）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={bloodType} onChange={inputBloodType} />
                         <TextBox className={'inputBx'} label={'Passport Number（パスポート番号）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={passportNumber} onChange={inputPassportNumber}/>
-                        {editBtn ? <div className={Style.editBtn_bx}><div className={Style.left} onClick={closeMenuBtn}>閉じる</div><div className={Style.right} onClick={() => editUserData(name, nationality, bloodType, passportNumber, uid, images)}>決定</div></div> : <div className={Style.editBtn} onClick={closeMenuBtn}>閉じる</div>}
+                        {editBtn ? <div className={Style.editBtnBx}><div className={Style.left} onClick={closeMenuBtn}>閉じる</div><div className={Style.right} onClick={() => editUserData(name, nationality, bloodType, passportNumber, uid, images)}>決定</div></div> : <div className={Style.editBtn} onClick={closeMenuBtn}>閉じる</div>}
                     </div>
                 </div>
             </div>

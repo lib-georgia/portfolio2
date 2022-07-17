@@ -1,12 +1,12 @@
 @import "../../pages/styles/_breakpoint";
 @import "../../pages/styles/_mixin";
 @include mq(pc) {
-  .headerMenu_bx {
+  .headerMenuBx {
     display: none;
   }
 }
 @include mq(tab) {
-  .headerMenu_bx {
+  .headerMenuBx {
     background: rgb(0, 0, 0, 0.8);
     position: fixed;
     top: 0;
@@ -29,7 +29,7 @@
         text-align: center;
         margin: 0 auto 20px auto;
         overflow: hidden;
-        .menuLst_inner {
+        .menuLstInner {
           display: inline-block;
           p {
             margin: 0;
@@ -46,7 +46,7 @@
 }
 
 @include mq(sp) {
-  .headerMenu_bx {
+  .headerMenuBx {
     background: rgb(0, 0, 0, 0.8);
     position: fixed;
     top: 0;
@@ -69,7 +69,7 @@
         text-align: center;
         margin: 0 auto 20px auto;
         overflow: hidden;
-        .menuLst_inner {
+        .menuLstInner {
           display: inline-block;
           p {
             margin: 0;

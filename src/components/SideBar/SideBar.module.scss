@@ -1,14 +1,13 @@
 @import "../../pages/styles/_breakpoint";
 @import "../../pages/styles/_mixin";
-.sidebar_bx {
+.sidebarBx {
   @include mq(pc) {
     height: 100vh;
     position: fixed;
     z-index: 999999;
     background: #b6c8ca;
-    .sidebar_left {
+    .sidebarLeft {
       background: #242831;
-      padding: 18px;
       box-sizing: border-box;
       float: left;
       height: 100vh;
@@ -32,10 +31,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        width: 100%;
         div {
           color: #fff;
           p {
-            margin: -22px 0 0 0;
+            margin: -15px 0 0 0;
             color: #fff;
             font-size: 10px;
             text-align: center;
@@ -47,17 +47,28 @@
         }
         span {
           margin-bottom: 5px;
-          padding: 18px;
-          font-size: 30px;
+          font-size: 38px;
+          text-align: center;
+          display: block;
+          svg{
+            width: 28px;
+            height: auto;
+          }
         }
       }
       .getLocation {
         position: absolute;
         bottom: 20px;
         color: #fff;
+        width: 100%;
         &:hover {
           opacity: 0.7;
           cursor: pointer;
+        }
+        span{
+          display: block;
+          margin: 0 auto;
+          text-align: center;
         }
         p {
           font-size: 10px;
@@ -84,7 +95,7 @@
   color: #fff;
   font-size: 30px;
 }
-.sidebar_right {
+.sidebarRight {
   height: 100vh;
   width: 350px;
   margin-left: 66px;
@@ -155,6 +166,11 @@
         &:hover {
           opacity: 0.7;
           cursor: pointer;
+        }
+        svg{
+          height: 25px;
+          display: block;
+          margin: 0 auto;
         }
       }
     }

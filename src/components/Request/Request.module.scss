@@ -1,6 +1,6 @@
 @import "../../pages/styles/_breakpoint";
 @import "../../pages/styles/_mixin";
-.request_inner {
+.requestInner {
   width: 500px;
   position: absolute;
   top: 50%;
@@ -35,7 +35,7 @@
   img{
     margin-top: 2%;
   }
-  .answer_bx {
+  .answerBx {
     overflow: hidden;
     div {
       color: #fff;

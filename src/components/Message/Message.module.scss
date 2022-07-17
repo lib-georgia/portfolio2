@@ -1,6 +1,6 @@
 @import "../../pages/styles/_breakpoint";
 @import "../../pages/styles/_mixin";
-.message_bx_wrapper {
+.messageBxWrapper {
   background: unset;
   position: absolute;
   top: 50%;
@@ -25,7 +25,7 @@
       font-weight:bold;
     }
   }
-  .message_bx_inner {
+  .messageBxInner {
     background: #fff;
     position: absolute;
     top: 50%;
@@ -35,7 +35,8 @@
     padding: 4%;
     box-sizing: border-box;
     width: 100%;
-    ul.openMessage_bx {
+    ul.openMessageBx {
+
       li {
         width: 100%;
         height: auto;
@@ -52,42 +53,76 @@
         }
       }
       li.friendMessage {
-        .avatar_bx {
-          margin-right: 2%;
+          .friendMessageBx{
+            float: left;
+            overflow: hidden;
+            width: fit-content;
+            width:-moz-fit-content;
+            span.friendTxt{
+              float: right;
+              position: relative;
+              padding-left: 15px;
+              width: fit-content;
+              width:-moz-fit-content;
+              max-width: calc(100% - 55px);
+              p{
+                padding: 8px 10px;
+                box-sizing: border-box;
+                overflow-wrap:  break-word;
+                width: fit-content;
+                width:-moz-fit-content;
+              }
+              span{
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 5px 8px 5px 0;
+                border-color: transparent #fff transparent transparent;
+                position: absolute;
+                left: 7px;
+                top: 9px;
+              }
+            }
+        .avatarBx {
+          margin: 0;
           float: left;
-        }
-        p {
-          float: right;
-          span {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 5px 8px 5px;
-            border-color: transparent #FFF transparent transparent;
-            position: absolute;
-            left: -15px;
-            top: 9px;
-          }
         }
       }
+      }
       li.myMessage {
-        .avatar_bx {
-          margin-left: 2%;
+        .myMessageBx{
           float: right;
-        }
-        p {
-          float: left;
-          overflow-wrap:  break-word;
-          span {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 5px 0 5px 8px;
-            border-color: transparent transparent transparent #fff;
-            position: absolute;
-            right: -7px;
-            top: 9px;
+          overflow: hidden;
+          width: fit-content;
+          width:-moz-fit-content;
+          span.friendTxt{
+            float: left;
+            position: relative;
+            padding-right: 15px;
+            width: fit-content;
+            width:-moz-fit-content;
+            max-width: calc(100% - 55px);
+            p{
+              padding: 8px 10px;
+              box-sizing: border-box;
+              overflow-wrap:  break-word;
+              width: fit-content;
+              width:-moz-fit-content;
+            }
+            span{
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 5px 0 5px 8px;
+              border-color: transparent transparent transparent #fff;
+              position: absolute;
+              right: 7px;
+              top: 9px;
+            }
           }
+        }
+        .avatarBx {
+          margin-left: 2%;
         }
       }
       li.choiceFriendName {
@@ -97,7 +132,7 @@
         }
       }
     }
-    .openMessage_bx {
+    .openMessageBx {
       background: #b6c8ca;
       padding: 2% 1%;
       height: 250px;
@@ -139,7 +174,7 @@
     }
   }
 }
-.message_submitBx {
+.messageSubmitBx {
   padding: 4% 0;
   overflow: hidden;
   box-sizing: border-box;
@@ -165,11 +200,11 @@
 }
 
 @include mq(pc) {
-  .message_bx_wrapper {
+  .messageBxWrapper {
     width: 600px;
     height: 50vh;
     .choiceFriendName {
-      .message_bx_inner {
+      .messageBxInner {
         width: 500px;
       }
     }
@@ -177,14 +212,14 @@
   }
 }
 @include mq(sp) {
-  .message_bx_wrapper {
+  .messageBxWrapper {
     width: 95%;
     max-height: 65%;
     height: 100%;
     .choiceFriendName {
-      .message_bx_inner {
+      .messageBxInner {
         width: 100%;
-        .openMessage_bx {
+        .openMessageBx {
           .messageCloseBtn {
             width: 60%;
           }
@@ -193,42 +228,42 @@
     }
   }
   @include mq(beside) {
-    .message_bx_wrapper{
+    .messageBxWrapper{
       height: 90vh;
       overflow: hidden;
       width: 70%;
-      .message_bx_inner{
+      .messageBxInner{
         width: 100%;
         position: relative;
         height: 90vh;
         padding: 20px;
         box-sizing: border-box;
-        .openMessage_bx{
+        .openMessageBx{
           height: 150px;
           margin: 10px 0;
         }
-        .message_submitBx{
+        .messageSubmitBx{
           padding: 5px;
         }
       }
     }
   }
   @include mq(tab){
-    .message_bx_wrapper{
+    .messageBxWrapper{
       height: 90vh;
       overflow: hidden;
       width: 70%;
-      .message_bx_inner{
+      .messageBxInner{
         width: 100%;
         position: relative;
         height: 90vh;
         padding: 20px;
         box-sizing: border-box;
-        .openMessage_bx{
+        .openMessageBx{
           height: 150px;
           margin: 10px 0;
         }
-        .message_submitBx{
+        .messageSubmitBx{
           padding: 5px;
         }
       }

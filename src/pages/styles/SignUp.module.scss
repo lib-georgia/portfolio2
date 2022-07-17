@@ -65,7 +65,7 @@
 
   .right {
     float: right;
-    .sinup_bx {
+    .sinupBx {
       h2 {
         font-size: 30px;
         font-family: "Fredoka", sans-serif;
@@ -86,7 +86,7 @@
           cursor: pointer;
         }
       }
-      .toSignUp_SignIn {
+      .toSignUpSignIn {
         width: 215px;
         margin: 0 auto;
         text-align: center;
@@ -125,7 +125,7 @@
       width: 50%;
       height: 100vh;
       position: relative;
-      .sinup_bx {
+      .sinupBx {
         position: absolute;
         width: 500px;
         top: 50%;
@@ -158,12 +158,12 @@
       padding: 4% 0 0 0;
       box-sizing: border-box;
       position: relative;
-      .sinup_bx {
+      .sinupBx {
         width: 90%;
         margin: 0 auto;
       }
     }
-    .toSignUp_SignIn {
+    .toSignUpSignIn {
       display: none;
     }
   }
@@ -192,12 +192,12 @@
       background: #fff;
       padding: 5% 0;
       box-sizing: border-box;
-      .sinup_bx {
+      .sinupBx {
         width: 90%;
         margin: 0 auto;
       }
     }
-    .toSignUp_SignIn {
+    .toSignUpSignIn {
       display: none;
     }
   }

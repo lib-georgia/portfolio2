@@ -1,6 +1,6 @@
 import React,{memo} from 'react';
-import Style from './styles/FriendLocation.module.scss';
-import Styles from './styles/Marker.module.scss';
+import Style from './FriendLocation.module.scss';
+import Styles from '../Marker/Marker.module.scss';
 
 const FriendLocation = memo((props) => {
     return (
@@ -29,7 +29,7 @@ const FriendLocation = memo((props) => {
                             <div className={Style.pulse} />
                         </div>
                         {props.index === props.currentKey && (
-                            <div className={Style.friendDetail_nonShare}>
+                            <div className={Style.friendDetailNonShare}>
                                 <ul>
                                     <li>氏名：{props.name}</li>
                                     <li>血液型：{props.bloodType}</li>

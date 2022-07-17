@@ -1,5 +1,5 @@
 import React from 'react';
-import Style from './styles/AdminDetail.module.scss';
+import Style from './AdminDetail.module.scss';
 
 const AdminDetail = (props) => {
 

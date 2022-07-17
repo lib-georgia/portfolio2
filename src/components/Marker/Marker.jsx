@@ -1,5 +1,5 @@
 import React from 'react';
-import Style from './styles/Marker.module.scss';
+import Style from './Marker.module.scss';
 
 const Marker = (props) => {
     const { color, name,onMarkerClick } = props;

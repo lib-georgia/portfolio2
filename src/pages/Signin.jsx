@@ -1,5 +1,5 @@
 import React,{useState,useCallback} from 'react';
-import TextBox from '../components/UIkit/TextBox';
+import TextBox from '../components/TextBox/TextBox';
 import {SignUpSignInHeader} from '../components';
 import { signIn } from '../apis';
 import { Link } from 'react-router-dom';
@@ -32,12 +32,12 @@ const Signin = () => {
           </div>
         </div>
         <div className={Style.right}>
-          <div className={Style.sinup_bx}>
+          <div className={Style.sinupBx}>
             <h2>Sign&nbsp;in</h2>
             <TextBox className={'inputBx'} label={'Email（メールアドレス）'} type={"email"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={email} onChange={inputEmail}/>
             <TextBox className={'inputBx'} label={'Password（パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={password} onChange={inputPassword} />
             <div className={Style.editBtn} onClick={signIn(email, password)}>決定</div>
-            <div className={Style.toSignUp_SignIn}><Link className={Style.authBx} to="/signup"><span className="material-icons-outlined">login</span><p>アカウント登録はこちら</p></Link></div>
+            <div className={Style.toSignUpSignIn}><Link className={Style.authBx} to="/signup"><span className="material-icons-outlined">login</span><p>アカウント登録はこちら</p></Link></div>
           </div>
         </div>
       </section>

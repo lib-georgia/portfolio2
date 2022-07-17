@@ -1,8 +1,8 @@
 import React, { useState, useEffect, memo } from 'react';
-import Style from './styles/Request.module.scss';
-import { db } from '../firebase';
-import { deleteRequest,approvalRequest } from '../apis';
-import Logo from '../asset/loading.svg';
+import Style from './Request.module.scss';
+import { db } from '../../firebase';
+import { deleteRequest,approvalRequest } from '../../apis';
+import Logo from '../../asset/loading.svg';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 
@@ -52,14 +52,14 @@ const Request = memo((props) => {
     const { requestFriend } = props;
 
     return (
-        <div className={Style.request_inner}>
+        <div className={Style.requestInner}>
             <React.Fragment>
-                <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                <Stack direction="row" spacing={2}>
                     {requestImages ? <Avatar alt={requestImages.id} src={requestImages.path} className={Style.avatar} /> : <Avatar alt="photo" src="/static/images/avatar/1.jpg" className={Style.avatar} />}
                 </Stack>
                 <h2>{requestName}</h2>
                 <p>リクエスト日：{requestDate}</p>
-                {loading ? <img src={Logo} alt="loading" />:<div className={Style.answer_bx}>
+                {loading ? <img src={Logo} alt="loading" />:<div className={Style.answerBx}>
                         <div className={Style.left} onClick={() => { deleteRequest(requestFriendId, uid); }}>拒否</div>
                         <div className={Style.right} onClick={() => { setLoading(true); approvalRequest(uid, requestFriendId, requestName, requestImages, myName, myImages) }}>承認</div>
                     </div>

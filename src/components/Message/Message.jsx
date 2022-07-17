@@ -1,10 +1,11 @@
 import React,{memo,useState,useEffect,useCallback} from 'react';
-import { sendMessage } from '../apis';
-import { db, FirebaseTimestamp } from '../firebase';
+import { sendMessage } from '../../apis';
+import { db, FirebaseTimestamp } from '../../firebase';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import TextBox from './UIkit/TextBox';
-import Style from './styles/Message.module.scss';
+import TextBox from '../TextBox/TextBox';
+import Style from './Message.module.scss';
+import SendIcon from '@mui/icons-material/Send';
 
 const Message = memo((props) => {
   const { user, choiceFriendId, userData, setOpenMessage, closeMessage } = props;
@@ -83,32 +84,36 @@ const Message = memo((props) => {
   });
   
   return (
-    <div className={Style.message_bx_wrapper}>
-      <div className={Style.message_bx_inner} id="scroll-area">
+    <div className={Style.messageBxWrapper}>
+      <div className={Style.messageBxInner} id="scroll-area">
         <div className={Style.choiceFriendName}>
-          <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+          <Stack direction="row" spacing={2} className={Style.avatarBx}>
             {messageFriendImages ? <Avatar alt={messageFriendImages.id} src={messageFriendImages.path} className={Style.avatar} /> : <Avatar src="../../public/no-images.jpeg" className={Style.avatar} />}
           </Stack>
           <p>{messageFriendName}</p>
         </div>
-        <ul className={Style.openMessage_bx} id="scroll-bx">
+        <ul className={Style.openMessageBx} id="scroll-bx">
           {messages.length > 0 && (
             messages.map((list, index) => (
               <React.Fragment key={index}>
                 {(() => {
                   if (user.uid !== list.sendParson) {
                     return <li className={Style.friendMessage}>
-                      <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                      <span className={Style.friendMessageBx}>
+                      <Stack direction="row" spacing={2} className={Style.avatarBx}>
                         {messageFriendImages ? <Avatar alt={messageFriendImages.id} src={messageFriendImages.path} className={Style.avatar} /> : <Avatar src="../../public/no-images.jpeg" className={Style.avatar} />}
                       </Stack>
-                      <p className={Style.friendTxt}>{list.message}<span></span></p>
+                      <span className={Style.friendTxt}><p>{list.message}</p><span></span></span>
+                      </span>
                     </li>
                   } else {
                     return <li className={Style.myMessage}>
-                      <p className={Style.friendTxt}>{list.message}<span></span></p>
-                      <Stack direction="row" spacing={2} className={Style.avatar_bx}>
-                        {userData.images ? <Avatar alt={userData.images.id} src={userData.images.path} className={Style.avatar} /> : <Avatar src="../../public/no-images.jpeg" className={Style.avatar} />}
-                      </Stack>
+                      <span className={Style.myMessageBx}>
+                        <span className={Style.friendTxt}><p>{list.message}</p><span></span></span>
+                        <Stack direction="row" spacing={2} className={Style.avatarBx}>
+                          {userData.images ? <Avatar alt={userData.images.id} src={userData.images.path} className={Style.avatar} /> : <Avatar src="../../public/no-images.jpeg" className={Style.avatar} />}
+                        </Stack>
+                      </span>
                     </li>
                   }
                 })()}
@@ -116,12 +121,12 @@ const Message = memo((props) => {
             ))
           )}
         </ul>
-        <div className={Style.message_submitBx}>
+        <div className={Style.messageSubmitBx}>
           <div className={Style.left}>
             <TextBox className={'inputBx'} label={'メッセージ'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={newMessage} onChange={inputNewMessage} />
           </div>
           <div className={Style.right} onClick={() => { sendMessage(user.uid, newMessage, choiceFriendId, sendNumber, time, date); setNewMessage("") }}>
-            <div className={Style.submitBtn}><span className="material-icons-outlined">send</span></div>
+            <div className={Style.submitBtn}><span><SendIcon /></span></div>
           </div>
         </div>
         <div className={Style.messageCloseBtn} onClick={closeMessage}>閉じる</div>

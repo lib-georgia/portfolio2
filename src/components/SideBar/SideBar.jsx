@@ -1,13 +1,19 @@
 import React,{useState,useEffect,useCallback,memo} from 'react';
-import Style from './styles/SideBar.module.scss';
+import Style from './SideBar.module.scss';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import { db,FirebaseTimestamp } from '../firebase';
-import { useAuthContext } from '../pages/AuthContext';
-import TextBox from './UIkit/TextBox'; 
-import { friendRequest } from '../apis';
-import Logo from '../asset/logo.png';
+import { db,FirebaseTimestamp } from '../../firebase';
+import { useAuthContext } from '../../pages/AuthContext';
+import TextBox from '../TextBox/TextBox'; 
+import { friendRequest } from '../../apis';
+import Logo from '../../asset/logo.png';
 import ChatIcon from '@mui/icons-material/Chat';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const SideBar = memo((props) => {
     const { user } = useAuthContext();
@@ -112,37 +118,37 @@ const SideBar = memo((props) => {
     }
 
     return (
-        <div className={Style.sidebar_bx}>
+        <div className={Style.sidebarBx}>
             <div className={Style.ovf}>
-                <div className={Style.sidebar_left}>
+                <div className={Style.sidebarLeft}>
                     <div className={Style.logo}><img src={Logo} alt="logo" /></div>
                 <div className={Style.linkPeople}>
-                    <div onClick={friendToggleBtn}><span className="material-icons-outlined">people</span><p>友だち</p></div>
-                    <div onClick={props.showProfile}><span className="material-icons-outlined">account_circle</span><p>プロフィール</p></div>
-                    <div onClick={props.myLocation}><span className="material-icons-outlined">pin_drop</span><p>自分の位置</p></div>
+                    <div onClick={friendToggleBtn}><span><PeopleAltIcon /></span><p>友だち</p></div>
+                    <div onClick={props.showProfile}><span><AccountCircleIcon /></span><p>プロフィール</p></div>
+                    <div onClick={props.myLocation}><span><LocationOnIcon /></span><p>自分の位置</p></div>
                 </div>
                 <div className={Style.getLocation}>
-                    <span className="material-icons-outlined" onClick={props.signOut}>logout</span>
+                    <span onClick={props.signOut}><LogoutIcon /></span>
                 </div>
                 </div>
                 {isOpenFriendList && (
-                    <div className={Style.sidebar_right}>
+                    <div className={Style.sidebarRight}>
                         <ul>
                             <li className={Style.friendSearch}>
                                 <TextBox className={'inputFriend'} label={'IDで友だち検索'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={friendId} onChange={inputFriendId} />
-                                <span className="material-icons-outlined" onClick={() => { props.showSearchFriend(friendId); setShowFindFriend(true)}}>search</span>
+                                <span className={Style.sendIconBx} onClick={() => { props.showSearchFriend(friendId); setShowFindFriend(true)}}><SearchIcon /></span>
                             </li>
                             {showFindFriend && (
                                 <li className={Style.findFriend}>
                                     <h2>{findFriendName}</h2>
-                                    <div onClick={() => { friendRequest(friendId, date, uid, myName, myImages); setSurveillance(true);}}><span className="material-icons-outlined">send</span>リクエスト</div>
+                                    <div onClick={() => { friendRequest(friendId, date, uid, myName, myImages); setSurveillance(true);}}><span><SendIcon /></span>リクエスト</div>
                                 </li>
                             )}
                             {request.length > 0 && <li className={Style.friendLstTtl}>リクエスト</li>}
                             {request.length > 0 && (
                                 request.map((list) => (
                                     <li key={list.friendId} className={Style.friendList} onClick={() => requestFriend(list.friendId)}>
-                                        <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                                        <Stack direction="row" spacing={2}>
                                             {list.images ? <Avatar alt={list.images.id} src={list.images.path} className={Style.avatar} /> : <Avatar alt="photo" src="/static/images/avatar/1.jpg" className={Style.avatar} />}
                                         </Stack>
                                         <p>{list.name}</p>
@@ -154,7 +160,7 @@ const SideBar = memo((props) => {
                                 friends.map((list) => (
                                     <li key={list.friendId} className={Style.friendList}>
                                         <span className={Style.friendInfo} onClick={() => choiceFriendLocation(list.friendId)}>
-                                            <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                                            <Stack direction="row" spacing={2}>
                                                 {list.images ? <Avatar alt={list.images.id} src={list.images.path} className={Style.avatar} /> : <Avatar alt="photo" src="/static/images/avatar/1.jpg" className={Style.avatar} />}
                                             </Stack>
                                             <p>{list.name}</p>

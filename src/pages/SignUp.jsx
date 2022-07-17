@@ -1,5 +1,5 @@
 import React,{useState,useCallback} from 'react';
-import TextBox from '../components/UIkit/TextBox';
+import TextBox from '../components/TextBox/TextBox';
 import { signUp } from '../apis';
 import { Link } from 'react-router-dom';
 import {SignUpSignInHeader} from '../components';
@@ -37,14 +37,15 @@ const SignUp = () => {
           </div>
       </div>
       <div className={Style.right}>
-        <div className={Style.sinup_bx}>
+        <div className={Style.sinupBx}>
           <h2>Sign&nbsp;up</h2>
           <TextBox className={'inputBx'} label={'Full Name（フルネーム）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={name} onChange={inputName}/>
           <TextBox className={'inputBx'} label={'Email（メールアドレス）'} type={"email"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={email} onChange={inputEmail}/>
           <TextBox className={'inputBx'} label={'Password（パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={password} onChange={inputPassword} />
           <TextBox className={'inputBx'} label={'confirmPassword（確認用パスワード）'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={confirmPassword} onChange={inputConfirmPassword} />
           <div className={Style.editBtn} onClick={signUp(name, email, password, confirmPassword)}>決定</div>
-          <div className={Style.toSignUp_SignIn}><Link className={Style.authBx} to="/signin"><span className="material-icons-outlined">login</span><p>アカウントをお持ちの方</p></Link></div>
+          {/* <div className={Style.toSignUp_SignIn}><Link className={Style.authBx} to="/signin"><span className="material-icons-outlined">login</span><p>アカウントをお持ちの方</p></Link></div> */}
+          <div><Link className={Style.authBx} to="/signin"><span className="material-icons-outlined">login</span><p>アカウントをお持ちの方</p></Link></div>
         </div>
       </div>
       </section>

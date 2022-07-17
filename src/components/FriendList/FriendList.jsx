@@ -1,11 +1,14 @@
 import React,{memo,useState,useEffect,useCallback} from 'react';
-import { db,FirebaseTimestamp } from '../firebase';
-import TextBox from './UIkit/TextBox';
-import { useAuthContext } from '../pages/AuthContext';
+import { db,FirebaseTimestamp } from '../../firebase';
+import TextBox from '../TextBox/TextBox';
+import { useAuthContext } from '../../pages/AuthContext';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import { friendRequest } from '../apis';
-import Style from './styles/FriendList.module.scss';
+import { friendRequest } from '../../apis';
+import Style from './FriendList.module.scss';
+import ChatIcon from '@mui/icons-material/Chat';
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
 
 const FriendList = memo((props) => {
     const { requestFriend,friendBtn,menuToggle } = props;
@@ -81,28 +84,41 @@ const FriendList = memo((props) => {
         }
     }, [user, uid])
 
+    const choiceFriendLocation = (friendId) => {
+        db.collection('user').doc(friendId).get().then((doc)=>{
+            const data = doc.data();
+            if (data.lat) {
+                props.onClick(friendId)
+            } else {
+                alert('位置情報がありません。')
+            }
+       }).catch((error) => {
+           console.log(`データを取得できませんでした (${error})`);
+       });
+    }
+
     return (
         <div className={Style.friendLst}>
             <div className={Style.inner}>
                 <ul>
                     <li className={Style.friendSearch}>
                         <TextBox className={'inputFriend'} label={'IDで友だち検索'} type={"text"} InputLabelProps={{ shrink: true, }} variant={"standard"} value={friendId} onChange={inputFriendId} />
-                        <span className="material-icons-outlined" onClick={() => { props.showSearchFriend(friendId); setShowFindFriend(true) }}>search</span>
+                        <span onClick={() => { props.showSearchFriend(friendId); setShowFindFriend(true) }}><SearchIcon /></span>
                     </li>
                     {showFindFriend && (
                         <li className={Style.friendList}>
-                            <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                            <Stack direction="row" spacing={2}>
                             <Avatar src={props.findFriendImages ? props.findFriendImages.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
                             </Stack>
                             <p>{props.findFriendName}</p>
-                            <span className="material-icons-outlined" onClick={() => { friendRequest(friendId, date, uid, myName, myImages); setSurveillance(true); }}>send</span>
+                            <span onClick={() => { friendRequest(friendId, date, uid, myName, myImages); setSurveillance(true); }}><SendIcon /></span>
                         </li>
                     )}
                     {request.length > 0 && <li className={Style.friendLstTtl}>リクエスト</li>}
                     {request.length > 0 && (
                         request.map((list) => (
                             <li key={list.friendId} className={Style.friendList} onClick={() => requestFriend(list.friendId)}>
-                                <Stack direction="row" spacing={2} className={Style.avatar_bx}>
+                                <Stack direction="row" spacing={2}>
                                 <Avatar src={list.requestImages ? list.requestImages.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
                                 </Stack>
                                 <p>{list.name}</p>
@@ -112,11 +128,14 @@ const FriendList = memo((props) => {
                     <li className={Style.friendLstTtl}>友だち</li>
                     {friends.length > 0 && (
                         friends.map((list) => (
-                            <li key={list.friendId} onClick={() => { props.onClick(list.friendId); closeMenuBtn() }} className={Style.friendList}>
-                                <Stack direction="row" spacing={2} className={Style.avatar_bx}>
-                                    <Avatar src={list.images ? list.images.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
-                                </Stack>
-                                <p>{list.name}</p>
+                            <li key={list.friendId} className={Style.friendList} onClick={() => closeMenuBtn()}>
+                                <span className={Style.friendInfo} onClick={() => choiceFriendLocation(list.friendId)}>
+                                    <Stack direction="row" spacing={2}>
+                                        <Avatar src={list.images ? list.images.path : "/static/images/avatar/1.jpg"} className={Style.avatar} />
+                                    </Stack>
+                                    <p>{list.name}</p>
+                                </span>
+                                <span className={Style.menu} onClick={() => { props.setChoiceFriendId(list.friendId); closeMenuBtn() }}><ChatIcon /></span>
                             </li>
                         ))
                     )}

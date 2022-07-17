@@ -37,7 +37,7 @@
     }
   }
 }
-.share_bx {
+.shareBx {
   position: absolute;
   bottom: 20px;
   z-index: 9;
@@ -48,7 +48,7 @@
     left: 0;
   }
   @include mq(tab) {
-    left: 75px;
+    left: 0;
   }
   @include mq(sp) {
     left: 0;
@@ -87,8 +87,11 @@
   }
   .stopShare {
     background: #fb6b61;
+    @include mq(tab) {
+      width: 50%;
+    }
   }
-  .toggle_choiceMapMode {
+  .toggleChoiceMapMode {
     border: 1px solid #ddd;
     width: 44px;
     height: 44px;
@@ -127,7 +130,7 @@
     }
   }
 }
-.message_bx {
+.messageBx {
   background: rgb(0, 0, 0, 0.8);
   position: fixed;
   top: 0;

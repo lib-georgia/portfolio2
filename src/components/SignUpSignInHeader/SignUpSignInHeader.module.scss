@@ -1,6 +1,6 @@
 @import "../../pages/styles/_breakpoint";
 @import "../../pages/styles/_mixin";
-.signupsignin_header {
+.signupsigninHeader {
   position: absolute;
   z-index: 999;
   top: 20px;
@@ -16,12 +16,12 @@
   }
 }
 @include mq(pc) {
-  .signupsignin_header {
+  .signupsigninHeader {
     display: none;
   }
 }
 @include mq(tab) {
-  .signupsignin_header {
+  .signupsigninHeader {
     width: 90%;
     .authBx {
       display: block;
@@ -32,12 +32,12 @@
       }
     }
   }
-  .sinup_bx > form > div > div > div > input {
+  .sinupBx > form > div > div > div > input {
     padding: 10px;
   }
 }
 @include mq(sp) {
-  .signupsignin_header {
+  .signupsigninHeader {
     width: 90%;
     .authBx {
       display: block;
@@ -48,7 +48,7 @@
       }
     }
   }
-  .sinup_bx > form > div > div > div > input {
+  .sinupBx > form > div > div > div > input {
     padding: 10px;
   }
 }
